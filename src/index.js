@@ -1,5 +1,5 @@
 import express from "express";
-import { PORT, PATH } from "./config/config.js";
+import { port, path } from "./config/config.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import { options } from "./loaders/swagger/swagger.js";
@@ -8,7 +8,9 @@ import { LoggerInstance } from "./loaders/logger/index.js";
 import morgan from "morgan";
 import users from "./routes/users.js";
 import status from "./routes/status.js";
-import db from "./database/db.js";
+import { db } from "./loaders/mongoose/index.js";
+// import db from "./database/db.js";
+// import { errorMiddleware } from "./middleware/error.js";
 
 const app = express();
 
@@ -19,41 +21,26 @@ app.use(express.urlencoded({ extended: false }));
 //Registrador de solicitudes
 app.use(morgan("dev"));
 
-// app.use((req, res, next) => {
-//   const err = new Error("Not Found");
-//   err.code = 404;
-//   next(err);
-// });
-// app.use((err, req, res, next) => {
-//   const code = err.code || 500;
-//   logger.error(`${code} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-//   logger.errr(err.stack);
-//   res.status(code);
-//   const body = {
-//     error: {
-//       code,
-//       message: err.message,
-//     },
-//   };
-//   res.json(body);
-// });
 const spec = swaggerJsDoc(options);
-app.use(PATH, swaggerUi.serve, swaggerUi.setup(spec));
+app.use(path, swaggerUi.serve, swaggerUi.setup(spec));
 
 app.use("/users", users);
 app.use("/status", status);
 
-//verificación de conexión a la db
-try {
-  await db.authenticate();
-  // hacemos que se cree una nueva db con el modelo
-  // db.sync({ alter: true });
-  db.sync({ force: false });
-  console.log("DB loaded and connected");
-} catch (error) {
-  console.log(`Error conection: ${error}`);
-}
+//midlewares de errores
+// app.use(errorMiddleware);
 
-app.listen(PORT, () => {
-  LoggerInstance.info(`Server UP running in http://localhost:${PORT}/`);
+//verificación de conexión a la db
+// try {
+//   await db.authenticate();
+// hacemos que se cree una nueva db con el modelo
+// db.sync({ alter: true });
+//   db.sync({ force: false });
+//   console.log("DB loaded and connected");
+// } catch (error) {
+//   console.log(`Error conection: ${error}`);
+// }
+
+app.listen(port, () => {
+  LoggerInstance.info(`Server UP running in http://localhost:${port}/`);
 });

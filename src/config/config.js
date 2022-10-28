@@ -1,15 +1,14 @@
-export const PORT = process.env.PORT || 3000;
-export const DB_HOST = process.env.DB_HOST || "localhost";
-export const DB_USER = process.env.DB_USER || "root";
-export const DB_PASSWORD = process.env.DB_PASSWORD || "";
-export const DB_NAME = process.env.DB_NAME || "disney_alkemy";
-export const DB_PORT = process.env.DB_PORT || 3306;
+import dotenv from "dotenv";
+dotenv.config();
 
+export const port = process.env.PORT;
+export const dbHost = process.env.DB_HOST;
+export const dbUser = process.env.DB_USER;
+export const dbPassword = process.env.DB_PASSWORD;
+export const dbName = process.env.DB_NAME;
+export const dbPort = process.env.DB_PORT;
+export const databaseUrl = process.env.DATABASE_URL;
 //Log
-export const LOG_LEVEL = "silly";
+export const logLevel = process.env.LOG_LEVEL;
 //SWAGGER
-export const PATH = "/docs";
-
-//auth
-export const AUTH_SECRET = process.env.AUTH_SECRET || "s3cret";
-export const AUTH_TTL = process.env.AUTH_TTL || "1d";
+export const path = process.env.PATH;

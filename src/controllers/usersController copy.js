@@ -1,13 +1,12 @@
-import User from "../models/users.js";
+import usersModel from "../models/users.js";
 import bcrypt from "bcryptjs";
 
 //Mostrar todos los registros
-export const getAllUsers = async (req, res, next) => {
+export const getAllUsers = async (req, res) => {
   try {
-    const users = User.find();
     res.status(200).json(users);
   } catch (error) {
-    next(error);
+    res.status(400).json({ message: error.message });
   }
 };
 //Mostrar un registro
@@ -33,7 +32,7 @@ export const createUser = async (req, res) => {
   try {
     const { username, password, name, email, enable, role } = req.body;
     const hash = await bcrypt.hash(password, 10);
-    await User.create({
+    await usersModel.create({
       username: username,
       hash: hash,
       name: name,
